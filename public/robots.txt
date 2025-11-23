@@ -1,0 +1,6 @@
+# robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.cabinet-moreau.fr/sitemap.xml
