@@ -2,18 +2,19 @@ import { cn } from '@/lib/utils/cn'
 import { ButtonHTMLAttributes, forwardRef } from 'react'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', children, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+    const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
 
     const variants = {
-      primary: 'bg-primary text-white hover:bg-primary-dark focus-visible:outline-primary',
-      secondary: 'bg-secondary text-white hover:bg-secondary-dark focus-visible:outline-secondary',
-      outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white focus-visible:outline-primary'
+      primary: 'bg-primary text-white hover:bg-primary-dark focus-visible:outline-primary shadow-sm hover:shadow-md',
+      secondary: 'bg-secondary text-white hover:bg-secondary-dark focus-visible:outline-secondary shadow-sm hover:shadow-md',
+      outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white focus-visible:outline-primary',
+      ghost: 'text-primary hover:bg-primary/10 focus-visible:outline-primary'
     }
 
     const sizes = {
