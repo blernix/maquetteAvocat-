@@ -5,8 +5,11 @@ import { motion } from 'framer-motion'
 import { Phone, ArrowRight, MessageCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { cabinetInfo } from '@/lib/data/config'
+import { useProspectIdentity } from '@/components/ProspectPersonalization'
 
 export default function CallToAction() {
+  const { ville } = useProspectIdentity()
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary-dark py-20 md:py-28">
       {/* Elements decoratifs */}
@@ -96,7 +99,9 @@ export default function CallToAction() {
             </div>
             <div className="h-10 w-px bg-white/20" />
             <div className="text-center">
-              <p className="text-2xl font-bold text-white">{cabinetInfo.barreauName}</p>
+              <p className="text-2xl font-bold text-white">
+                {ville ? `Barreau de ${ville}` : cabinetInfo.barreauName}
+              </p>
               <p className="text-sm text-gray-300">TOQUE {cabinetInfo.toqueNumber}</p>
             </div>
             <div className="h-10 w-px bg-white/20" />

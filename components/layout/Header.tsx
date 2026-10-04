@@ -5,11 +5,13 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Phone, Mail, ChevronRight } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
+import { useProspectIdentity } from '@/components/ProspectPersonalization'
 import { cn } from '@/lib/utils/cn'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { nom } = useProspectIdentity()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,7 +69,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="group flex items-center">
             <span className="font-serif text-2xl font-bold text-primary transition-transform group-hover:scale-105">
-              {cabinetInfo.name}
+              {nom ?? cabinetInfo.name}
             </span>
           </Link>
 

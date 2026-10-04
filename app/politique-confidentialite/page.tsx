@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { cabinetInfo } from '@/lib/data/config'
+import { ProspectText } from '@/components/ProspectPersonalization'
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
@@ -28,7 +29,8 @@ export default function PolitiqueConfidentialitePage() {
             {/* Introduction */}
             <div className="rounded-lg bg-secondary/10 p-6 not-prose mb-8">
               <p className="text-gray-700">
-                Le {cabinetInfo.name} attache une importance particulière à la protection de vos
+                Le <ProspectText field="nom" fallback={cabinetInfo.name} /> attache une importance
+                particulière à la protection de vos
                 données personnelles. La présente politique vous informe de la manière dont nous
                 collectons, utilisons et protégeons vos informations conformément au Règlement
                 Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés.
@@ -43,13 +45,18 @@ export default function PolitiqueConfidentialitePage() {
               Le responsable du traitement de vos données personnelles est :
             </p>
             <div className="rounded-lg bg-gray-50 p-6 not-prose">
-              <p className="mb-2"><strong>{cabinetInfo.name}</strong></p>
+              <p className="mb-2"><strong><ProspectText field="nom" fallback={cabinetInfo.name} /></strong></p>
               <p className="mb-2">
-                Représenté par {cabinetInfo.lawyerFirstName} {cabinetInfo.lawyerName}
+                Représenté par{' '}
+                <ProspectText
+                  field="nom"
+                  fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+                />
               </p>
               <p className="mb-2">
                 {cabinetInfo.address.street}<br />
-                {cabinetInfo.address.postalCode} {cabinetInfo.address.city}
+                {cabinetInfo.address.postalCode}{' '}
+                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
               </p>
               <p className="mb-2">Email : {cabinetInfo.contact.email}</p>
               <p className="mb-2">Téléphone : {cabinetInfo.contact.phone}</p>
@@ -262,7 +269,11 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <ul className="list-disc pl-6">
               <li>Par email : {cabinetInfo.contact.email}</li>
-              <li>Par courrier postal : {cabinetInfo.address.street}, {cabinetInfo.address.postalCode} {cabinetInfo.address.city}</li>
+              <li>
+                Par courrier postal : {cabinetInfo.address.street},{' '}
+                {cabinetInfo.address.postalCode}{' '}
+                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
+              </li>
             </ul>
             <p>
               Nous vous répondrons dans un délai maximum d&apos;<strong>un mois</strong> à compter de la
@@ -355,7 +366,10 @@ export default function PolitiqueConfidentialitePage() {
             <ul className="list-disc pl-6">
               <li>Email : {cabinetInfo.contact.email}</li>
               <li>Téléphone : {cabinetInfo.contact.phone}</li>
-              <li>Courrier : {cabinetInfo.address.street}, {cabinetInfo.address.postalCode} {cabinetInfo.address.city}</li>
+              <li>
+                Courrier : {cabinetInfo.address.street}, {cabinetInfo.address.postalCode}{' '}
+                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
+              </li>
             </ul>
 
             {/* Date de mise à jour */}

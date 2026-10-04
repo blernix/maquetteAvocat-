@@ -1,16 +1,18 @@
 'use client'
 
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import { ArrowRight, Phone, Scale, Shield } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
+import { useProspectIdentity } from '@/components/ProspectPersonalization'
 
 interface HeroProps {
-  title: string
+  title: ReactNode
   subtitle?: string
-  description: string
+  description: ReactNode
   ctaText?: string
   ctaLink?: string
   imageSrc?: string
@@ -24,6 +26,8 @@ export default function Hero({
   ctaLink = '/contact',
   imageSrc
 }: HeroProps) {
+  const { nom, ville } = useProspectIdentity()
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary-dark py-20 text-white md:py-32 lg:py-40">
       {/* Elements decoratifs */}
@@ -44,7 +48,7 @@ export default function Hero({
             >
               <Badge variant="white" animated>
                 <Scale className="h-4 w-4" />
-                Cabinet d'avocat Paris
+                Cabinet d&apos;avocat {ville ?? cabinetInfo.address.city}
               </Badge>
             </motion.div>
 
@@ -113,8 +117,12 @@ export default function Hero({
                     <Scale className="h-8 w-8 text-white" />
                   </div>
                   <div>
-                    <p className="text-lg font-semibold text-white">{cabinetInfo.name}</p>
-                    <p className="text-sm text-gray-300">{cabinetInfo.barreauName}</p>
+                    <p className="text-lg font-semibold text-white">
+                      {nom ?? cabinetInfo.name}
+                    </p>
+                    <p className="text-sm text-gray-300">
+                      {ville ? `Barreau de ${ville}` : cabinetInfo.barreauName}
+                    </p>
                   </div>
                 </div>
 

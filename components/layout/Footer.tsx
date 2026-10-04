@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
+import { ProspectText } from '@/components/ProspectPersonalization'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -13,16 +14,24 @@ export default function Footer() {
           {/* Informations cabinet */}
           <div>
             <h3 className="mb-4 font-serif text-lg font-semibold text-white">
-              {cabinetInfo.name}
+              <ProspectText field="nom" fallback={cabinetInfo.name} />
             </h3>
             <p className="mb-2 text-sm">
               {cabinetInfo.legalStructure}
             </p>
             <p className="text-sm">
-              {cabinetInfo.lawyerFirstName} {cabinetInfo.lawyerName}
+              <ProspectText
+                field="nom"
+                fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+              />
             </p>
             <p className="text-sm">
-              Avocat au {cabinetInfo.barreauName}
+              Avocat au{' '}
+              <ProspectText
+                field="ville"
+                prefix="Barreau de "
+                fallback={cabinetInfo.address.city}
+              />
             </p>
             <p className="text-sm">
               Toque n°{cabinetInfo.toqueNumber}
@@ -39,7 +48,8 @@ export default function Footer() {
                 <MapPin className="h-5 w-5 flex-shrink-0 text-secondary" aria-hidden="true" />
                 <address className="not-italic text-sm">
                   {cabinetInfo.address.street}<br />
-                  {cabinetInfo.address.postalCode} {cabinetInfo.address.city}
+                  {cabinetInfo.address.postalCode}{' '}
+                  <ProspectText field="ville" fallback={cabinetInfo.address.city} />
                 </address>
               </div>
               <a
@@ -141,7 +151,8 @@ export default function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-800 py-6 text-center text-sm">
           <p>
-            © {currentYear} {cabinetInfo.name}. Tous droits réservés.
+            © {currentYear} <ProspectText field="nom" fallback={cabinetInfo.name} />. Tous droits
+            réservés.
           </p>
           <p className="mt-2 text-xs">
             SIRET : {cabinetInfo.siret}

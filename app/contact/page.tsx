@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import ContactForm from '@/components/sections/ContactForm'
 import { cabinetInfo } from '@/lib/data/config'
+import { ProspectText } from '@/components/ProspectPersonalization'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -44,7 +45,8 @@ export default function ContactPage() {
                     <h3 className="mb-2 font-semibold text-gray-900">Adresse</h3>
                     <address className="not-italic text-gray-600">
                       {cabinetInfo.address.street}<br />
-                      {cabinetInfo.address.postalCode} {cabinetInfo.address.city}
+                      {cabinetInfo.address.postalCode}{' '}
+                      <ProspectText field="ville" fallback={cabinetInfo.address.city} />
                     </address>
                   </div>
                 </div>
@@ -144,7 +146,8 @@ export default function ContactPage() {
                 <MapPin className="mx-auto mb-2 h-12 w-12" aria-hidden="true" />
                 <p className="text-sm">
                   Carte Google Maps<br />
-                  {cabinetInfo.address.street}, {cabinetInfo.address.city}
+                  {cabinetInfo.address.street},{' '}
+                  <ProspectText field="ville" fallback={cabinetInfo.address.city} />
                 </p>
               </div>
             </div>

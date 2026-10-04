@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { cabinetInfo } from '@/lib/data/config'
+import { ProspectText } from '@/components/ProspectPersonalization'
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
@@ -31,15 +32,21 @@ export default function MentionsLegalesPage() {
               Le présent site internet est édité par :
             </p>
             <div className="rounded-lg bg-gray-50 p-6 not-prose">
-              <p className="mb-2"><strong>{cabinetInfo.name}</strong></p>
+              <p className="mb-2"><strong><ProspectText field="nom" fallback={cabinetInfo.name} /></strong></p>
               <p className="mb-2">{cabinetInfo.legalStructure}</p>
               <p className="mb-2">
-                Représenté par {cabinetInfo.lawyerFirstName} {cabinetInfo.lawyerName}, Avocat
+                Représenté par{' '}
+                <ProspectText
+                  field="nom"
+                  fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+                />
+                , Avocat
               </p>
               <p className="mb-2">
                 <strong>Adresse :</strong><br />
                 {cabinetInfo.address.street}<br />
-                {cabinetInfo.address.postalCode} {cabinetInfo.address.city}
+                {cabinetInfo.address.postalCode}{' '}
+                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
               </p>
               <p className="mb-2">
                 <strong>Téléphone :</strong> {cabinetInfo.contact.phone}
@@ -58,7 +65,12 @@ export default function MentionsLegalesPage() {
             </h2>
             <div className="rounded-lg bg-gray-50 p-6 not-prose">
               <p className="mb-2">
-                <strong>Profession :</strong> Avocat au {cabinetInfo.barreauName}
+                <strong>Profession :</strong> Avocat au{' '}
+                <ProspectText
+                  field="ville"
+                  prefix="Barreau de "
+                  fallback={cabinetInfo.address.city}
+                />
               </p>
               <p className="mb-2">
                 <strong>Numéro de TOQUE :</strong> {cabinetInfo.toqueNumber}
@@ -89,8 +101,12 @@ export default function MentionsLegalesPage() {
               3. Directeur de publication
             </h2>
             <p>
-              Le directeur de la publication du site est {cabinetInfo.lawyerFirstName}{' '}
-              {cabinetInfo.lawyerName}.
+              Le directeur de la publication du site est{' '}
+              <ProspectText
+                field="nom"
+                fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+              />
+              .
             </p>
 
             {/* Hébergeur */}
@@ -119,7 +135,7 @@ export default function MentionsLegalesPage() {
               droit d&apos;auteur. Toute reproduction, représentation, modification, publication ou
               adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le
               procédé utilisé, est interdite, sauf autorisation écrite préalable du{' '}
-              {cabinetInfo.name}.
+              <ProspectText field="nom" fallback={cabinetInfo.name} />.
             </p>
             <p>
               Toute exploitation non autorisée du site ou de l&apos;un de ses éléments sera considérée

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { MapPin, Clock, Train, Car, Phone } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
+import { useProspectIdentity } from '@/components/ProspectPersonalization'
 import Section, { SectionHeader } from '@/components/ui/Section'
 
 const container = {
@@ -21,13 +22,16 @@ const item = {
 }
 
 export default function InfoPratiques() {
+  const { ville } = useProspectIdentity()
+  const city = ville ?? cabinetInfo.address.city
+
   const infos = [
     {
       icon: MapPin,
       title: 'Adresse',
       content: [
         cabinetInfo.address.street,
-        `${cabinetInfo.address.postalCode} ${cabinetInfo.address.city}`,
+        `${cabinetInfo.address.postalCode} ${city}`,
       ],
     },
     {
@@ -52,7 +56,7 @@ export default function InfoPratiques() {
       <SectionHeader
         subtitle="Informations pratiques"
         title="Nous trouver"
-        description="Notre cabinet vous accueille dans un cadre professionnel et confidentiel, au coeur de Paris."
+        description={`Notre cabinet vous accueille dans un cadre professionnel et confidentiel, au coeur de ${city}.`}
       />
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -72,11 +76,11 @@ export default function InfoPratiques() {
                 {cabinetInfo.address.street}
               </p>
               <p className="text-center text-gray-500">
-                {cabinetInfo.address.postalCode} {cabinetInfo.address.city}
+                {cabinetInfo.address.postalCode} {city}
               </p>
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${cabinetInfo.address.street}, ${cabinetInfo.address.postalCode} ${cabinetInfo.address.city}`
+                  `${cabinetInfo.address.street}, ${cabinetInfo.address.postalCode} ${city}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
