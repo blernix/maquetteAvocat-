@@ -5,6 +5,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import CookieBanner from '@/components/layout/CookieBanner'
 import SchemaOrg from '@/components/layout/SchemaOrg'
+import { ProspectPersonalization } from '@/components/ProspectPersonalization'
 import { siteMetadata } from '@/lib/data/config'
 
 const inter = Inter({
@@ -50,20 +51,22 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${playfair.variable}`}>
       <body className="flex min-h-screen flex-col">
-        {/* Skip link pour l'accessibilité */}
-        <a href="#main-content" className="skip-link">
-          Aller au contenu principal
-        </a>
+        <ProspectPersonalization>
+          {/* Skip link pour l'accessibilité */}
+          <a href="#main-content" className="skip-link">
+            Aller au contenu principal
+          </a>
 
-        <Header />
+          <Header />
 
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
 
-        <Footer />
-        <CookieBanner />
-        <SchemaOrg />
+          <Footer />
+          <CookieBanner />
+          <SchemaOrg />
+        </ProspectPersonalization>
       </body>
     </html>
   )

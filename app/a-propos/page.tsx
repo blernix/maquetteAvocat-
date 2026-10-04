@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { cabinetInfo } from '@/lib/data/config'
+import { ProspectText } from '@/components/ProspectPersonalization'
 import { GraduationCap, Award, Scale, BookOpen } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -38,18 +39,38 @@ export default function AProposPage() {
             {/* Contenu */}
             <div className="order-1 lg:order-2">
               <h2 className="mb-6 font-serif text-3xl font-bold text-gray-900">
-                {cabinetInfo.lawyerFirstName} {cabinetInfo.lawyerName}
+                <ProspectText
+                  field="nom"
+                  fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+                />
               </h2>
               <div className="mb-4 space-y-2 text-lg text-gray-600">
-                <p>Avocat au {cabinetInfo.barreauName}</p>
+                <p>
+                  Avocat au{' '}
+                  <ProspectText
+                    field="ville"
+                    prefix="Barreau de "
+                    fallback={cabinetInfo.address.city}
+                  />
+                </p>
                 <p>Toque n°{cabinetInfo.toqueNumber}</p>
               </div>
 
               <div className="space-y-4 text-gray-600">
                 <p>
-                  Inscrite au {cabinetInfo.barreauName} depuis 2010, {cabinetInfo.lawyerFirstName}{' '}
-                  {cabinetInfo.lawyerName} exerce principalement dans les domaines du droit de la
-                  famille, du droit pénal et du droit du travail.
+                  Inscrite au{' '}
+                  <ProspectText
+                    field="ville"
+                    prefix="Barreau de "
+                    fallback={cabinetInfo.address.city}
+                  />{' '}
+                  depuis 2010,{' '}
+                  <ProspectText
+                    field="nom"
+                    fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+                  />{' '}
+                  exerce principalement dans les domaines du droit de la famille, du droit pénal et
+                  du droit du travail.
                 </p>
                 <p>
                   Diplômée de l&apos;Université Paris 1 Panthéon-Sorbonne, elle a développé au fil des
@@ -102,9 +123,19 @@ export default function AProposPage() {
                   Expérience
                 </h3>
                 <ul className="space-y-2 text-gray-600">
-                  <li><strong>Depuis 2015 :</strong> Cabinet Moreau & Associés (structure actuelle)</li>
+                  <li>
+                    <strong>Depuis 2015 :</strong>{' '}
+                    <ProspectText field="nom" fallback={cabinetInfo.name} /> (structure actuelle)
+                  </li>
                   <li><strong>2010-2015 :</strong> Collaboratrice au sein d&apos;un cabinet parisien spécialisé en droit de la famille</li>
-                  <li><strong>2008-2010 :</strong> Formation et stages au Barreau de Paris</li>
+                  <li>
+                    <strong>2008-2010 :</strong> Formation et stages au{' '}
+                    <ProspectText
+                      field="ville"
+                      prefix="Barreau de "
+                      fallback={cabinetInfo.address.city}
+                    />
+                  </li>
                 </ul>
               </div>
             </div>
@@ -120,7 +151,14 @@ export default function AProposPage() {
                   Appartenance professionnelle
                 </h3>
                 <ul className="space-y-2 text-gray-600">
-                  <li>Membre du {cabinetInfo.barreauName}</li>
+                  <li>
+                    Membre du{' '}
+                    <ProspectText
+                      field="ville"
+                      prefix="Barreau de "
+                      fallback={cabinetInfo.address.city}
+                    />
+                  </li>
                   <li>Soumise au Règlement Intérieur National (RIN) de la profession d&apos;avocat</li>
                   <li>Formations continues régulières (obligation déontologique)</li>
                 </ul>
@@ -217,7 +255,13 @@ export default function AProposPage() {
               respect du secret professionnel.
             </p>
             <p className="text-gray-600">
-              Notre activité est contrôlée par le Conseil de l&apos;Ordre du {cabinetInfo.barreauName}.
+              Notre activité est contrôlée par le Conseil de l&apos;Ordre du{' '}
+              <ProspectText
+                field="ville"
+                prefix="Barreau de "
+                fallback={cabinetInfo.address.city}
+              />
+              .
               Nous sommes également couverts par une assurance Responsabilité Civile Professionnelle
               auprès de {cabinetInfo.insurance.company}.
             </p>
