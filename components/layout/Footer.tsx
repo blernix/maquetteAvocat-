@@ -1,7 +1,10 @@
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { MapPin, Phone, Clock } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
-import { ProspectText } from '@/components/ProspectPersonalization'
+import {
+  ProspectText,
+  ProspectEmail,
+} from '@/components/ProspectPersonalization'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -47,8 +50,14 @@ export default function Footer() {
               <div className="flex gap-3">
                 <MapPin className="h-5 w-5 flex-shrink-0 text-secondary" aria-hidden="true" />
                 <address className="not-italic text-sm">
-                  {cabinetInfo.address.street}<br />
-                  {cabinetInfo.address.postalCode}{' '}
+                  <ProspectText
+                    field="adresse"
+                    fallback={cabinetInfo.address.street}
+                  /><br />
+                  <ProspectText
+                    field="code_postal"
+                    fallback={cabinetInfo.address.postalCode}
+                  />{' '}
                   <ProspectText field="ville" fallback={cabinetInfo.address.city} />
                 </address>
               </div>
@@ -59,13 +68,11 @@ export default function Footer() {
                 <Phone className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                 <span>{cabinetInfo.contact.phone}</span>
               </a>
-              <a
-                href={`mailto:${cabinetInfo.contact.email}`}
+              <ProspectEmail
                 className="flex items-center gap-3 text-sm transition-colors hover:text-secondary"
-              >
-                <Mail className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                <span>{cabinetInfo.contact.email}</span>
-              </a>
+                withIcon
+                iconClassName="h-5 w-5 flex-shrink-0 text-secondary"
+              />
               <div className="flex gap-3">
                 <Clock className="h-5 w-5 flex-shrink-0 text-secondary" aria-hidden="true" />
                 <p className="text-sm">{cabinetInfo.hours}</p>

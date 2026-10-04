@@ -3,9 +3,12 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Phone, Mail, ChevronRight } from 'lucide-react'
+import { Menu, X, Phone, ChevronRight } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
-import { useProspectIdentity } from '@/components/ProspectPersonalization'
+import {
+  useProspectIdentity,
+  ProspectEmail,
+} from '@/components/ProspectPersonalization'
 import { cn } from '@/lib/utils/cn'
 
 export default function Header() {
@@ -49,13 +52,11 @@ export default function Header() {
               <Phone className="h-4 w-4" aria-hidden="true" />
               <span>{cabinetInfo.contact.phone}</span>
             </a>
-            <a
-              href={`mailto:${cabinetInfo.contact.email}`}
+            <ProspectEmail
               className="flex items-center gap-2 transition-colors hover:text-secondary"
-            >
-              <Mail className="h-4 w-4" aria-hidden="true" />
-              <span>{cabinetInfo.contact.email}</span>
-            </a>
+              withIcon
+              iconClassName="h-4 w-4"
+            />
           </div>
         </div>
       </div>

@@ -22,16 +22,18 @@ const item = {
 }
 
 export default function InfoPratiques() {
-  const { ville } = useProspectIdentity()
+  const { ville, adresse, code_postal } = useProspectIdentity()
   const city = ville ?? cabinetInfo.address.city
+  const street = adresse ?? cabinetInfo.address.street
+  const postalCode = code_postal ?? cabinetInfo.address.postalCode
 
   const infos = [
     {
       icon: MapPin,
       title: 'Adresse',
       content: [
-        cabinetInfo.address.street,
-        `${cabinetInfo.address.postalCode} ${city}`,
+        street,
+        `${postalCode} ${city}`,
       ],
     },
     {
@@ -73,14 +75,14 @@ export default function InfoPratiques() {
             <div className="flex h-full min-h-[300px] flex-col items-center justify-center p-8">
               <MapPin className="mb-4 h-16 w-16 text-primary/30" />
               <p className="text-center text-lg font-medium text-gray-700">
-                {cabinetInfo.address.street}
+                {street}
               </p>
               <p className="text-center text-gray-500">
-                {cabinetInfo.address.postalCode} {city}
+                {postalCode} {city}
               </p>
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${cabinetInfo.address.street}, ${cabinetInfo.address.postalCode} ${city}`
+                  `${street}, ${postalCode} ${city}`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

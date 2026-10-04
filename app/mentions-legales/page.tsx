@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { cabinetInfo } from '@/lib/data/config'
-import { ProspectText } from '@/components/ProspectPersonalization'
+import {
+  ProspectText,
+  ProspectEmail,
+} from '@/components/ProspectPersonalization'
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
@@ -44,15 +47,21 @@ export default function MentionsLegalesPage() {
               </p>
               <p className="mb-2">
                 <strong>Adresse :</strong><br />
-                {cabinetInfo.address.street}<br />
-                {cabinetInfo.address.postalCode}{' '}
+                <ProspectText
+                  field="adresse"
+                  fallback={cabinetInfo.address.street}
+                /><br />
+                <ProspectText
+                  field="code_postal"
+                  fallback={cabinetInfo.address.postalCode}
+                />{' '}
                 <ProspectText field="ville" fallback={cabinetInfo.address.city} />
               </p>
               <p className="mb-2">
                 <strong>Téléphone :</strong> {cabinetInfo.contact.phone}
               </p>
               <p className="mb-2">
-                <strong>Email :</strong> {cabinetInfo.contact.email}
+                <strong>Email :</strong> <ProspectEmail className="text-primary hover:underline" />
               </p>
               <p className="mb-2">
                 <strong>SIRET :</strong> {cabinetInfo.siret}

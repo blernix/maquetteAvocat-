@@ -1,29 +1,38 @@
-import Script from 'next/script'
+'use client'
+
 import { cabinetInfo, siteMetadata } from '@/lib/data/config'
 import { domaines } from '@/lib/data/domaines'
+import { useProspectIdentity } from '@/components/ProspectPersonalization'
 
 export default function SchemaOrg() {
-  const schema = {
+  const identity = useProspectIdentity()
+
+  const name = identity.nom ?? cabinetInfo.name
+  const city = identity.ville ?? cabinetInfo.address.city
+  const street = identity.adresse ?? cabinetInfo.address.street
+  const postalCode = identity.code_postal ?? cabinetInfo.address.postalCode
+  const barreau = `Barreau de ${city}`
+
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Attorney',
-    name: cabinetInfo.name,
-    image: `${siteMetadata.url}/images/logo.png`,
-    '@id': siteMetadata.url,
-    url: siteMetadata.url,
+    name,
+    '@id': identity.active ? undefined : siteMetadata.url,
+    url: identity.active ? undefined : siteMetadata.url,
+    image: identity.active ? undefined : `${siteMetadata.url}/images/logo.png`,
     telephone: cabinetInfo.contact.phone,
-    email: cabinetInfo.contact.email,
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: cabinetInfo.address.street,
-      addressLocality: cabinetInfo.address.city,
-      postalCode: cabinetInfo.address.postalCode,
-      addressCountry: cabinetInfo.address.country
+      streetAddress: street,
+      addressLocality: city,
+      postalCode,
+      addressCountry: cabinetInfo.address.country,
     },
     geo: {
       '@type': 'GeoCoordinates',
       latitude: 48.8738,
-      longitude: 2.3268
+      longitude: 2.3268,
     },
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
@@ -32,29 +41,49 @@ export default function SchemaOrg() {
         'Tuesday',
         'Wednesday',
         'Thursday',
-        'Friday'
+        'Friday',
       ],
       opens: '09:00',
-      closes: '18:00'
+      closes: '18:00',
     },
     areaServed: {
       '@type': 'City',
-      name: 'Paris'
+      name: city,
     },
-    knowsAbout: domaines.map(d => d.title),
+    knowsAbout: domaines.map((d) => d.title),
     memberOf: {
       '@type': 'Organization',
-      name: cabinetInfo.barreauName
+      name: barreau,
     },
-    founder: {
+  }
+
+  // L'adresse de démonstration n'est jamais inventée : sans `?email=`, on
+  // omet simplement la propriété email. Le fondateur fictif n'est inclus que
+  // sur la version d'origine (aucun paramètre).
+  if (identity.email) {
+    schema.email = identity.email
+  } else if (!identity.active) {
+    schema.email = cabinetInfo.contact.email
+  }
+
+  if (identity.active) {
+    if (identity.prenom) {
+      schema.founder = {
+        '@type': 'Person',
+        name: identity.prenom,
+        jobTitle: 'Avocat',
+      }
+    }
+  } else {
+    schema.founder = {
       '@type': 'Person',
       name: `${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`,
-      jobTitle: 'Avocat'
+      jobTitle: 'Avocat',
     }
   }
 
   return (
-    <Script
+    <script
       id="schema-org"
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}

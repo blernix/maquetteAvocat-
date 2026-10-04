@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { cabinetInfo } from '@/lib/data/config'
-import { ProspectText } from '@/components/ProspectPersonalization'
+import {
+  ProspectText,
+  ProspectEmail,
+} from '@/components/ProspectPersonalization'
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
@@ -54,11 +57,17 @@ export default function PolitiqueConfidentialitePage() {
                 />
               </p>
               <p className="mb-2">
-                {cabinetInfo.address.street}<br />
-                {cabinetInfo.address.postalCode}{' '}
+                <ProspectText
+                  field="adresse"
+                  fallback={cabinetInfo.address.street}
+                /><br />
+                <ProspectText
+                  field="code_postal"
+                  fallback={cabinetInfo.address.postalCode}
+                />{' '}
                 <ProspectText field="ville" fallback={cabinetInfo.address.city} />
               </p>
-              <p className="mb-2">Email : {cabinetInfo.contact.email}</p>
+              <p className="mb-2">Email : <ProspectEmail /></p>
               <p className="mb-2">Téléphone : {cabinetInfo.contact.phone}</p>
             </div>
 
@@ -268,10 +277,17 @@ export default function PolitiqueConfidentialitePage() {
               Pour exercer vos droits, vous pouvez nous contacter :
             </p>
             <ul className="list-disc pl-6">
-              <li>Par email : {cabinetInfo.contact.email}</li>
+              <li>Par email : <ProspectEmail /></li>
               <li>
-                Par courrier postal : {cabinetInfo.address.street},{' '}
-                {cabinetInfo.address.postalCode}{' '}
+                Par courrier postal :{' '}
+                <ProspectText
+                  field="adresse"
+                  fallback={cabinetInfo.address.street}
+                />,{' '}
+                <ProspectText
+                  field="code_postal"
+                  fallback={cabinetInfo.address.postalCode}
+                />{' '}
                 <ProspectText field="ville" fallback={cabinetInfo.address.city} />
               </li>
             </ul>
@@ -364,10 +380,18 @@ export default function PolitiqueConfidentialitePage() {
               vos données personnelles, vous pouvez nous contacter :
             </p>
             <ul className="list-disc pl-6">
-              <li>Email : {cabinetInfo.contact.email}</li>
+              <li>Email : <ProspectEmail /></li>
               <li>Téléphone : {cabinetInfo.contact.phone}</li>
               <li>
-                Courrier : {cabinetInfo.address.street}, {cabinetInfo.address.postalCode}{' '}
+                Courrier :{' '}
+                <ProspectText
+                  field="adresse"
+                  fallback={cabinetInfo.address.street}
+                />,{' '}
+                <ProspectText
+                  field="code_postal"
+                  fallback={cabinetInfo.address.postalCode}
+                />{' '}
                 <ProspectText field="ville" fallback={cabinetInfo.address.city} />
               </li>
             </ul>
