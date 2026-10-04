@@ -9,36 +9,31 @@ import {
 } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Mail } from 'lucide-react'
+import { Mail, Phone } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
+import {
+  EMPTY_PROSPECT_IDENTITY,
+  resolveProspectContact,
+  type ProspectContact,
+  type ProspectField,
+  type ProspectIdentity,
+} from '@/lib/prospect-contact'
 
-export type ProspectField =
-  | 'nom'
-  | 'ville'
-  | 'prenom'
-  | 'email'
-  | 'adresse'
-  | 'code_postal'
+export type {
+  ProspectContact,
+  ProspectField,
+  ProspectIdentity,
+} from '@/lib/prospect-contact'
 
-export interface ProspectIdentity {
-  nom: string | null
-  ville: string | null
-  prenom: string | null
-  email: string | null
-  adresse: string | null
-  code_postal: string | null
-  /** Vrai dès qu'au moins un paramètre reconnu est fourni dans l'URL. */
-  active: boolean
-}
+const EMPTY_IDENTITY: ProspectIdentity = EMPTY_PROSPECT_IDENTITY
 
-const EMPTY_IDENTITY: ProspectIdentity = {
-  nom: null,
-  ville: null,
-  prenom: null,
-  email: null,
-  adresse: null,
-  code_postal: null,
-  active: false,
+export function useProspectContact(): ProspectContact {
+  return resolveProspectContact(useProspectIdentity(), {
+    street: cabinetInfo.address.street,
+    postalCode: cabinetInfo.address.postalCode,
+    city: cabinetInfo.address.city,
+    phone: cabinetInfo.contact.phone,
+  })
 }
 
 const ProspectContext = createContext<ProspectIdentity>(EMPTY_IDENTITY)
@@ -109,7 +104,9 @@ export function ProspectPersonalization({
       prenom: sanitize(params.get('prenom')),
       email: sanitize(params.get('email')),
       adresse: sanitize(params.get('adresse')),
-      code_postal: sanitize(params.get('code_postal')),
+      code_postal: sanitize(params.get('cp') ?? params.get('code_postal')),
+      tel: sanitize(params.get('tel')),
+      acces: sanitize(params.get('acces')),
     }
 
     const active = Object.values(next).some((value) => value !== null)
@@ -240,6 +237,171 @@ export function ProspectEmail({
     >
       {icon}
       {cabinetInfo.contact.email}
+    </a>
+  )
+}
+
+/**
+ * Adresse postale (bloc multi-lignes). Masquée si aucune adresse ni ville
+ * exploitable n'est disponible sur une page personnalisée.
+ */
+export function ProspectAddress({ className }: { className?: string }) {
+  const { showAddress, addressLines } = useProspectContact()
+  if (!showAddress) return null
+
+  return (
+    <address className={className} data-prospect-address="">
+      {addressLines.map((line, index) => (
+        <span key={line}>
+          {index > 0 && <br />}
+          {line}
+        </span>
+      ))}
+    </address>
+  )
+}
+
+/**
+ * Affiche `children` uniquement si une adresse (ou une ville seule) est
+ * disponible. Pratique pour masquer aussi l'icône associée.
+ */
+export function IfProspectAddress({ children }: { children: ReactNode }) {
+  const { showAddress } = useProspectContact()
+  if (!showAddress) return null
+  return <>{children}</>
+}
+
+/**
+ * Affiche `children` uniquement si un numéro de téléphone est disponible.
+ */
+export function IfProspectPhone({ children }: { children: ReactNode }) {
+  const { phone } = useProspectContact()
+  if (!phone) return null
+  return <>{children}</>
+}
+
+/**
+ * Affiche `children` uniquement sur la version d'origine (aucun paramètre).
+ * Sert à réserver certaines mentions de démonstration (fax, accès parisien…).
+ */
+export function IfNoProspect({ children }: { children: ReactNode }) {
+  const { active } = useProspectContact()
+  if (active) return null
+  return <>{children}</>
+}
+
+/**
+ * Affiche `children` uniquement sur une page personnalisée (au moins un
+ * paramètre d'URL reconnu).
+ */
+export function IfActive({ children }: { children: ReactNode }) {
+  const { active } = useProspectContact()
+  if (!active) return null
+  return <>{children}</>
+}
+
+/**
+ * Ligne « Accès » issue du paramètre `?acces=`. Rien si absent.
+ */
+export function ProspectAcces({ className }: { className?: string }) {
+  const { acces } = useProspectContact()
+  if (!acces) return null
+  return <p className={className} data-prospect-acces="">{acces}</p>
+}
+
+/**
+ * Affiche `children` uniquement si un accès (métro / bus / parking) est fourni
+ * sur une page personnalisée. Sert à masquer tout le bloc « Accès » plutôt que
+ * de laisser un titre orphelin.
+ */
+export function IfProspectAcces({ children }: { children: ReactNode }) {
+  const { acces } = useProspectContact()
+  if (!acces) return null
+  return <>{children}</>
+}
+
+/**
+ * Adresse sur une seule ligne (« 12 rue X, 31000 Toulouse » ou « Lyon »).
+ * Rend `null` si rien n'est disponible.
+ */
+export function ProspectAddressInline() {
+  const { showAddress, addressOneLine } = useProspectContact()
+  if (!showAddress || !addressOneLine) return null
+  return <>{addressOneLine}</>
+}
+
+/**
+ * Numéro de téléphone cliquable. Masqué si aucun numéro n'est disponible.
+ */
+export function ProspectPhone({
+  className,
+  withIcon = false,
+  iconClassName,
+}: {
+  className?: string
+  withIcon?: boolean
+  iconClassName?: string
+}) {
+  const { phone, phoneHref } = useProspectContact()
+  if (!phone || !phoneHref) return null
+
+  const icon = withIcon ? (
+    <Phone className={iconClassName} aria-hidden="true" />
+  ) : null
+
+  return (
+    <a href={phoneHref} className={className} data-prospect-phone="">
+      {icon}
+      {phone}
+    </a>
+  )
+}
+
+/**
+ * Ligne « Téléphone : … » (libellé inclus). Rien n'est rendu si le numéro est
+ * absent, afin de ne pas laisser un libellé orphelin.
+ */
+export function ProspectPhoneLine({
+  label = 'Téléphone :',
+  className,
+}: {
+  label?: string
+  className?: string
+}) {
+  const { phone, phoneHref } = useProspectContact()
+  if (!phone) return null
+
+  return (
+    <span className={className}>
+      <strong>{label}</strong>{' '}
+      {phoneHref ? <a href={phoneHref}>{phone}</a> : phone}
+    </span>
+  )
+}
+
+/**
+ * Lien d'itinéraire Google Maps déduit de l'adresse affichée. Rend `null` si
+ * aucune localisation n'est connue.
+ */
+export function ProspectMapLink({
+  className,
+  children,
+}: {
+  className?: string
+  children: ReactNode
+}) {
+  const { mapHref } = useProspectContact()
+  if (!mapHref) return null
+
+  return (
+    <a
+      href={mapHref}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      data-prospect-map=""
+    >
+      {children}
     </a>
   )
 }

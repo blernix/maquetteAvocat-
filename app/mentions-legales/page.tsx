@@ -4,6 +4,10 @@ import { cabinetInfo } from '@/lib/data/config'
 import {
   ProspectText,
   ProspectEmail,
+  ProspectAddress,
+  ProspectPhone,
+  IfProspectAddress,
+  IfProspectPhone,
 } from '@/components/ProspectPersonalization'
 
 export const metadata: Metadata = {
@@ -45,21 +49,17 @@ export default function MentionsLegalesPage() {
                 />
                 , Avocat
               </p>
-              <p className="mb-2">
-                <strong>Adresse :</strong><br />
-                <ProspectText
-                  field="adresse"
-                  fallback={cabinetInfo.address.street}
-                /><br />
-                <ProspectText
-                  field="code_postal"
-                  fallback={cabinetInfo.address.postalCode}
-                />{' '}
-                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-              </p>
-              <p className="mb-2">
-                <strong>Téléphone :</strong> {cabinetInfo.contact.phone}
-              </p>
+              <IfProspectAddress>
+                <div className="mb-2">
+                  <strong>Adresse :</strong><br />
+                  <ProspectAddress className="not-italic" />
+                </div>
+              </IfProspectAddress>
+              <IfProspectPhone>
+                <p className="mb-2">
+                  <strong>Téléphone :</strong> <ProspectPhone />
+                </p>
+              </IfProspectPhone>
               <p className="mb-2">
                 <strong>Email :</strong> <ProspectEmail className="text-primary hover:underline" />
               </p>

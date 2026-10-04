@@ -2,8 +2,17 @@ import type { Metadata } from 'next'
 import ContactForm from '@/components/sections/ContactForm'
 import { cabinetInfo } from '@/lib/data/config'
 import {
-  ProspectText,
   ProspectEmail,
+  ProspectAddress,
+  ProspectPhone,
+  ProspectAcces,
+  ProspectAddressInline,
+  ProspectMapLink,
+  IfProspectAddress,
+  IfProspectPhone,
+  IfProspectAcces,
+  IfNoProspect,
+  IfActive,
 } from '@/components/ProspectPersonalization'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 
@@ -38,47 +47,38 @@ export default function ContactPage() {
               </h2>
 
               <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                      <MapPin className="h-6 w-6 text-primary" aria-hidden="true" />
+                <IfProspectAddress>
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                        <MapPin className="h-6 w-6 text-primary" aria-hidden="true" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="mb-2 font-semibold text-gray-900">Adresse</h3>
+                      <ProspectAddress className="not-italic text-gray-600" />
                     </div>
                   </div>
-                  <div>
-                    <h3 className="mb-2 font-semibold text-gray-900">Adresse</h3>
-                    <address className="not-italic text-gray-600">
-                      <ProspectText
-                        field="adresse"
-                        fallback={cabinetInfo.address.street}
-                      /><br />
-                      <ProspectText
-                        field="code_postal"
-                        fallback={cabinetInfo.address.postalCode}
-                      />{' '}
-                      <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-                    </address>
-                  </div>
-                </div>
+                </IfProspectAddress>
 
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                      <Phone className="h-6 w-6 text-primary" aria-hidden="true" />
+                <IfProspectPhone>
+                  <div className="flex gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                        <Phone className="h-6 w-6 text-primary" aria-hidden="true" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="mb-2 font-semibold text-gray-900">Téléphone</h3>
+                      <ProspectPhone className="text-gray-600 transition-colors hover:text-primary" />
+                      <IfNoProspect>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Fax : {cabinetInfo.contact.fax}
+                        </p>
+                      </IfNoProspect>
                     </div>
                   </div>
-                  <div>
-                    <h3 className="mb-2 font-semibold text-gray-900">Téléphone</h3>
-                    <a
-                      href={`tel:${cabinetInfo.contact.phone.replace(/\s/g, '')}`}
-                      className="text-gray-600 transition-colors hover:text-primary"
-                    >
-                      {cabinetInfo.contact.phone}
-                    </a>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Fax : {cabinetInfo.contact.fax}
-                    </p>
-                  </div>
-                </div>
+                </IfProspectPhone>
 
                 <div className="flex gap-4">
                   <div className="flex-shrink-0">
@@ -118,16 +118,28 @@ export default function ContactPage() {
                 </p>
               </div>
 
-              <div className="mt-8 rounded-lg bg-gray-100 p-6">
-                <h3 className="mb-3 font-serif text-lg font-semibold text-gray-900">
-                  Accès
-                </h3>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>Métro :</strong> Lignes 3, 9, 12 - Station Havre-Caumartin</p>
-                  <p><strong>Bus :</strong> Lignes 20, 21, 22, 27, 29, 32, 66, 68, 81, 95</p>
-                  <p><strong>Parking :</strong> Parking Haussmann Saint-Lazare</p>
+              <IfNoProspect>
+                <div className="mt-8 rounded-lg bg-gray-100 p-6">
+                  <h3 className="mb-3 font-serif text-lg font-semibold text-gray-900">
+                    Accès
+                  </h3>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p><strong>Métro :</strong> Lignes 3, 9, 12 - Station Havre-Caumartin</p>
+                    <p><strong>Bus :</strong> Lignes 20, 21, 22, 27, 29, 32, 66, 68, 81, 95</p>
+                    <p><strong>Parking :</strong> Parking Haussmann Saint-Lazare</p>
+                  </div>
                 </div>
-              </div>
+              </IfNoProspect>
+              <IfProspectAcces>
+                <div className="mt-8 rounded-lg bg-gray-100 p-6">
+                  <h3 className="mb-3 font-serif text-lg font-semibold text-gray-900">
+                    Accès
+                  </h3>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <ProspectAcces />
+                  </div>
+                </div>
+              </IfProspectAcces>
             </div>
 
             {/* Formulaire de contact */}
@@ -148,14 +160,23 @@ export default function ContactPage() {
             <div className="flex h-full items-center justify-center text-gray-500">
               <div className="text-center">
                 <MapPin className="mx-auto mb-2 h-12 w-12" aria-hidden="true" />
-                <p className="text-sm">
-                  Carte Google Maps<br />
-                  <ProspectText
-                    field="adresse"
-                    fallback={cabinetInfo.address.street}
-                  />,{' '}
-                  <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-                </p>
+                <IfNoProspect>
+                  <p className="text-sm">
+                    Carte Google Maps<br />
+                    {cabinetInfo.address.street}, {cabinetInfo.address.city}
+                  </p>
+                </IfNoProspect>
+                <IfActive>
+                  <IfProspectAddress>
+                    <p className="text-sm">
+                      Carte Google Maps<br />
+                      <ProspectAddressInline />
+                    </p>
+                  </IfProspectAddress>
+                </IfActive>
+                <ProspectMapLink className="mt-4 inline-block text-sm font-medium text-primary hover:underline">
+                  Voir sur Google Maps
+                </ProspectMapLink>
               </div>
             </div>
           </div>

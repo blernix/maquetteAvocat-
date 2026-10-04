@@ -4,6 +4,9 @@ import { cabinetInfo } from '@/lib/data/config'
 import {
   ProspectText,
   ProspectEmail,
+  ProspectAddress,
+  ProspectPhone,
+  IfProspectAddress,
 } from '@/components/ProspectPersonalization'
 
 export default function Footer() {
@@ -47,27 +50,17 @@ export default function Footer() {
               Coordonnées
             </h3>
             <div className="space-y-3">
-              <div className="flex gap-3">
-                <MapPin className="h-5 w-5 flex-shrink-0 text-secondary" aria-hidden="true" />
-                <address className="not-italic text-sm">
-                  <ProspectText
-                    field="adresse"
-                    fallback={cabinetInfo.address.street}
-                  /><br />
-                  <ProspectText
-                    field="code_postal"
-                    fallback={cabinetInfo.address.postalCode}
-                  />{' '}
-                  <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-                </address>
-              </div>
-              <a
-                href={`tel:${cabinetInfo.contact.phone.replace(/\s/g, '')}`}
+              <IfProspectAddress>
+                <div className="flex gap-3">
+                  <MapPin className="h-5 w-5 flex-shrink-0 text-secondary" aria-hidden="true" />
+                  <ProspectAddress className="not-italic text-sm" />
+                </div>
+              </IfProspectAddress>
+              <ProspectPhone
                 className="flex items-center gap-3 text-sm transition-colors hover:text-secondary"
-              >
-                <Phone className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                <span>{cabinetInfo.contact.phone}</span>
-              </a>
+                withIcon
+                iconClassName="h-5 w-5 flex-shrink-0"
+              />
               <ProspectEmail
                 className="flex items-center gap-3 text-sm transition-colors hover:text-secondary"
                 withIcon

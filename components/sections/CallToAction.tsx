@@ -5,10 +5,14 @@ import { motion } from 'framer-motion'
 import { Phone, ArrowRight, MessageCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { cabinetInfo } from '@/lib/data/config'
-import { useProspectIdentity } from '@/components/ProspectPersonalization'
+import {
+  useProspectIdentity,
+  useProspectContact,
+} from '@/components/ProspectPersonalization'
 
 export default function CallToAction() {
   const { ville } = useProspectIdentity()
+  const { phone, phoneHref } = useProspectContact()
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary-dark py-20 md:py-28">
@@ -72,16 +76,18 @@ export default function CallToAction() {
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Button>
               </Link>
-              <a href={`tel:${cabinetInfo.contact.phone.replace(/\s/g, '')}`}>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary"
-                >
-                  <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
-                  {cabinetInfo.contact.phone}
-                </Button>
-              </a>
+              {phone && phoneHref && (
+                <a href={phoneHref}>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary"
+                  >
+                    <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
+                    {phone}
+                  </Button>
+                </a>
+              )}
             </motion.div>
           </motion.div>
 

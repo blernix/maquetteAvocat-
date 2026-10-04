@@ -7,6 +7,7 @@ import { Menu, X, Phone, ChevronRight } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
 import {
   useProspectIdentity,
+  useProspectContact,
   ProspectEmail,
 } from '@/components/ProspectPersonalization'
 import { cn } from '@/lib/utils/cn'
@@ -15,6 +16,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { nom } = useProspectIdentity()
+  const { phone, phoneHref } = useProspectContact()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,13 +47,15 @@ export default function Header() {
       )}>
         <div className="container-custom">
           <div className="flex flex-col items-center justify-between gap-2 text-sm sm:flex-row">
-            <a
-              href={`tel:${cabinetInfo.contact.phone.replace(/\s/g, '')}`}
-              className="flex items-center gap-2 transition-colors hover:text-secondary"
-            >
-              <Phone className="h-4 w-4" aria-hidden="true" />
-              <span>{cabinetInfo.contact.phone}</span>
-            </a>
+            {phone && phoneHref && (
+              <a
+                href={phoneHref}
+                className="flex items-center gap-2 transition-colors hover:text-secondary"
+              >
+                <Phone className="h-4 w-4" aria-hidden="true" />
+                <span>{phone}</span>
+              </a>
+            )}
             <ProspectEmail
               className="flex items-center gap-2 transition-colors hover:text-secondary"
               withIcon

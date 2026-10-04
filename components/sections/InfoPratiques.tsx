@@ -3,7 +3,10 @@
 import { motion } from 'framer-motion'
 import { MapPin, Clock, Train, Car, Phone } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
-import { useProspectIdentity } from '@/components/ProspectPersonalization'
+import {
+  useProspectIdentity,
+  useProspectContact,
+} from '@/components/ProspectPersonalization'
 import Section, { SectionHeader } from '@/components/ui/Section'
 
 const container = {
@@ -22,36 +25,44 @@ const item = {
 }
 
 export default function InfoPratiques() {
-  const { ville, adresse, code_postal } = useProspectIdentity()
+  const { ville } = useProspectIdentity()
+  const contact = useProspectContact()
   const city = ville ?? cabinetInfo.address.city
-  const street = adresse ?? cabinetInfo.address.street
-  const postalCode = code_postal ?? cabinetInfo.address.postalCode
 
-  const infos = [
-    {
-      icon: MapPin,
-      title: 'Adresse',
-      content: [
-        street,
-        `${postalCode} ${city}`,
-      ],
-    },
-    {
-      icon: Clock,
-      title: 'Horaires',
-      content: [cabinetInfo.hours, 'Sur rendez-vous uniquement'],
-    },
-    {
+  const infos: {
+    icon: typeof MapPin
+    title: string
+    content: string[]
+  }[] = []
+
+  if (contact.showAddress) {
+    infos.push({ icon: MapPin, title: 'Adresse', content: contact.addressLines })
+  }
+
+  infos.push({
+    icon: Clock,
+    title: 'Horaires',
+    content: [cabinetInfo.hours, 'Sur rendez-vous uniquement'],
+  })
+
+  if (!contact.active) {
+    infos.push({
       icon: Train,
       title: 'Transports',
       content: ['Metro: Havre-Caumartin (L3, L9)', 'Bus: Lignes 20, 21, 22, 66'],
-    },
-    {
+    })
+    infos.push({
       icon: Car,
       title: 'Stationnement',
-      content: ['Parking Haussmann', 'Parking Chaussee d\'Antin'],
-    },
-  ]
+      content: ['Parking Haussmann', "Parking Chaussee d'Antin"],
+    })
+  } else if (contact.acces) {
+    infos.push({
+      icon: Train,
+      title: 'Accès',
+      content: [contact.acces],
+    })
+  }
 
   return (
     <Section background="gray" decorative>
@@ -74,22 +85,25 @@ export default function InfoPratiques() {
             {/* Placeholder pour la carte - a remplacer par Google Maps */}
             <div className="flex h-full min-h-[300px] flex-col items-center justify-center p-8">
               <MapPin className="mb-4 h-16 w-16 text-primary/30" />
-              <p className="text-center text-lg font-medium text-gray-700">
-                {street}
-              </p>
-              <p className="text-center text-gray-500">
-                {postalCode} {city}
-              </p>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${street}, ${postalCode} ${city}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white transition-all hover:bg-primary-dark btn-hover-lift"
-              >
-                Voir sur Google Maps
-              </a>
+              {contact.showAddress && (
+                <div className="text-center">
+                  {contact.addressLines.map((line) => (
+                    <p key={line} className="text-lg font-medium text-gray-700">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {contact.mapHref && (
+                <a
+                  href={contact.mapHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white transition-all hover:bg-primary-dark btn-hover-lift"
+                >
+                  Voir sur Google Maps
+                </a>
+              )}
             </div>
           </div>
         </motion.div>
@@ -124,30 +138,32 @@ export default function InfoPratiques() {
         </motion.div>
       </div>
 
-      {/* Bandeau telephone */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.3 }}
-        className="mt-12 flex flex-col items-center justify-between gap-4 rounded-2xl bg-white p-6 shadow-soft sm:flex-row sm:p-8"
-      >
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10">
-            <Phone className="h-7 w-7 text-secondary" />
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Besoin d'un rendez-vous ?</p>
-            <p className="text-xl font-semibold text-gray-900">{cabinetInfo.contact.phone}</p>
-          </div>
-        </div>
-        <a
-          href={`tel:${cabinetInfo.contact.phone.replace(/\s/g, '')}`}
-          className="rounded-lg bg-secondary px-6 py-3 font-medium text-white transition-all hover:bg-secondary-dark btn-hover-lift"
+      {/* Bandeau telephone : masqué si aucun numéro n'est disponible */}
+      {contact.phone && contact.phoneHref && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="mt-12 flex flex-col items-center justify-between gap-4 rounded-2xl bg-white p-6 shadow-soft sm:flex-row sm:p-8"
         >
-          Appeler maintenant
-        </a>
-      </motion.div>
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10">
+              <Phone className="h-7 w-7 text-secondary" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Besoin d'un rendez-vous ?</p>
+              <p className="text-xl font-semibold text-gray-900">{contact.phone}</p>
+            </div>
+          </div>
+          <a
+            href={contact.phoneHref}
+            className="rounded-lg bg-secondary px-6 py-3 font-medium text-white transition-all hover:bg-secondary-dark btn-hover-lift"
+          >
+            Appeler maintenant
+          </a>
+        </motion.div>
+      )}
     </Section>
   )
 }

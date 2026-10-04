@@ -7,7 +7,10 @@ import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import { ArrowRight, Phone, Scale, Shield } from 'lucide-react'
 import { cabinetInfo } from '@/lib/data/config'
-import { useProspectIdentity } from '@/components/ProspectPersonalization'
+import {
+  useProspectIdentity,
+  useProspectContact,
+} from '@/components/ProspectPersonalization'
 
 interface HeroProps {
   title: ReactNode
@@ -27,6 +30,7 @@ export default function Hero({
   imageSrc
 }: HeroProps) {
   const { nom, ville } = useProspectIdentity()
+  const { phone, phoneHref } = useProspectContact()
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary-dark py-20 text-white md:py-32 lg:py-40">
@@ -93,12 +97,14 @@ export default function Hero({
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Button>
               </Link>
-              <a href={`tel:${cabinetInfo.contact.phone.replace(/\s/g, '')}`}>
-                <Button variant="outline" size="lg" className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary">
-                  <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
-                  {cabinetInfo.contact.phone}
-                </Button>
-              </a>
+              {phone && phoneHref && (
+                <a href={phoneHref}>
+                  <Button variant="outline" size="lg" className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white hover:text-primary">
+                    <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
+                    {phone}
+                  </Button>
+                </a>
+              )}
             </motion.div>
           </div>
 

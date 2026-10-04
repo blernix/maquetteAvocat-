@@ -3,6 +3,11 @@ import { cabinetInfo } from '@/lib/data/config'
 import {
   ProspectText,
   ProspectEmail,
+  ProspectAddress,
+  ProspectAddressInline,
+  ProspectPhone,
+  IfProspectAddress,
+  IfProspectPhone,
 } from '@/components/ProspectPersonalization'
 
 export const metadata: Metadata = {
@@ -56,19 +61,15 @@ export default function PolitiqueConfidentialitePage() {
                   fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
                 />
               </p>
-              <p className="mb-2">
-                <ProspectText
-                  field="adresse"
-                  fallback={cabinetInfo.address.street}
-                /><br />
-                <ProspectText
-                  field="code_postal"
-                  fallback={cabinetInfo.address.postalCode}
-                />{' '}
-                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-              </p>
+              <IfProspectAddress>
+                <div className="mb-2">
+                  <ProspectAddress className="not-italic" />
+                </div>
+              </IfProspectAddress>
               <p className="mb-2">Email : <ProspectEmail /></p>
-              <p className="mb-2">Téléphone : {cabinetInfo.contact.phone}</p>
+              <IfProspectPhone>
+                <p className="mb-2">Téléphone : <ProspectPhone /></p>
+              </IfProspectPhone>
             </div>
 
             {/* Données collectées */}
@@ -278,18 +279,11 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <ul className="list-disc pl-6">
               <li>Par email : <ProspectEmail /></li>
-              <li>
-                Par courrier postal :{' '}
-                <ProspectText
-                  field="adresse"
-                  fallback={cabinetInfo.address.street}
-                />,{' '}
-                <ProspectText
-                  field="code_postal"
-                  fallback={cabinetInfo.address.postalCode}
-                />{' '}
-                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-              </li>
+              <IfProspectAddress>
+                <li>
+                  Par courrier postal : <ProspectAddressInline />
+                </li>
+              </IfProspectAddress>
             </ul>
             <p>
               Nous vous répondrons dans un délai maximum d&apos;<strong>un mois</strong> à compter de la
@@ -381,19 +375,14 @@ export default function PolitiqueConfidentialitePage() {
             </p>
             <ul className="list-disc pl-6">
               <li>Email : <ProspectEmail /></li>
-              <li>Téléphone : {cabinetInfo.contact.phone}</li>
-              <li>
-                Courrier :{' '}
-                <ProspectText
-                  field="adresse"
-                  fallback={cabinetInfo.address.street}
-                />,{' '}
-                <ProspectText
-                  field="code_postal"
-                  fallback={cabinetInfo.address.postalCode}
-                />{' '}
-                <ProspectText field="ville" fallback={cabinetInfo.address.city} />
-              </li>
+              <IfProspectPhone>
+                <li>Téléphone : <ProspectPhone /></li>
+              </IfProspectPhone>
+              <IfProspectAddress>
+                <li>
+                  Courrier : <ProspectAddressInline />
+                </li>
+              </IfProspectAddress>
             </ul>
 
             {/* Date de mise à jour */}
