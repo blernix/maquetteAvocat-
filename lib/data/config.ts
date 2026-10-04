@@ -6,8 +6,8 @@ export const cabinetInfo: CabinetInfo = {
   lawyerName: 'Moreau',
   lawyerFirstName: 'Sophie',
   barreauName: 'Barreau de Paris',
-  toqueNumber: 'T1234',
-  siret: '123 456 789 00012',
+  toqueNumber: '[N° DE TOQUE À REMPLIR]',
+  siret: '[NUMÉRO SIRET À REMPLIR]',
   address: {
     street: '42 Boulevard Haussmann',
     postalCode: '75009',
