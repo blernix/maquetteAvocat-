@@ -52,6 +52,19 @@ function replaceAll(input: string, search: string, replacement: string): string 
   return input.split(search).join(replacement)
 }
 
+function stripAccents(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+}
+
+function startsWithIgnoringCaseAndAccents(
+  value: string,
+  prefix: string
+): boolean {
+  return stripAccents(value)
+    .toLowerCase()
+    .startsWith(stripAccents(prefix).toLowerCase())
+}
+
 function personalizeDocumentText(
   text: string,
   identity: ProspectIdentity
@@ -182,6 +195,40 @@ export function ProspectText({
       {value ?? fallback}
       {suffix}
     </>
+  )
+}
+
+/**
+ * Nom personnel du praticien, déduit de `?nom=` et `?prenom=`.
+ *
+ * Rend uniquement du texte (jamais de HTML injecté), tronqué à 60 caractères.
+ * Aucun `?nom=` → rien n'est rendu (bloc masqué, jamais de valeur inventée).
+ * Le préfixe « Cabinet » éventuel est retiré, puis le prénom est ajouté
+ * seulement s'il n'est pas déjà présent (comparaison sans casse ni accents).
+ */
+export function ProspectPractitionerName({
+  className,
+}: {
+  className?: string
+}) {
+  const { nom, prenom } = useProspectIdentity()
+  if (!nom) return null
+
+  let base = nom
+  if (startsWithIgnoringCaseAndAccents(base, 'Cabinet ')) {
+    base = base.slice('Cabinet '.length).trim()
+  }
+
+  if (prenom && !startsWithIgnoringCaseAndAccents(base, prenom)) {
+    base = `${prenom} ${base}`
+  }
+
+  const value = `Maître ${base}`.slice(0, MAX_LENGTH)
+
+  return (
+    <span className={className} data-prospect-practitioner="">
+      {value}
+    </span>
   )
 }
 

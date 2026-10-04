@@ -10,6 +10,7 @@ import { cabinetInfo } from '@/lib/data/config'
 import {
   useProspectIdentity,
   useProspectContact,
+  ProspectPractitionerName,
 } from '@/components/ProspectPersonalization'
 
 interface HeroProps {
@@ -75,6 +76,8 @@ export default function Hero({
             >
               {title}
             </motion.h1>
+
+            <ProspectPractitionerName className="block font-medium tracking-wide text-secondary-light" />
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}

@@ -38,8 +38,8 @@ export const metadata: Metadata = {
     siteName: siteMetadata.title,
   },
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
   },
 }
 

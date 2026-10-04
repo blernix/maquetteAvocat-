@@ -1,6 +1,11 @@
 import type { Metadata } from 'next'
 import { cabinetInfo } from '@/lib/data/config'
-import { ProspectText } from '@/components/ProspectPersonalization'
+import {
+  ProspectText,
+  ProspectPractitionerName,
+  IfActive,
+  IfNoProspect,
+} from '@/components/ProspectPersonalization'
 import { GraduationCap, Award, Scale, BookOpen } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -65,10 +70,15 @@ export default function AProposPage() {
                     fallback={cabinetInfo.address.city}
                   />{' '}
                   depuis 2010,{' '}
-                  <ProspectText
-                    field="nom"
-                    fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
-                  />{' '}
+                  <IfActive>
+                    <ProspectPractitionerName />
+                  </IfActive>
+                  <IfNoProspect>
+                    <ProspectText
+                      field="nom"
+                      fallback={`${cabinetInfo.lawyerFirstName} ${cabinetInfo.lawyerName}`}
+                    />
+                  </IfNoProspect>{' '}
                   exerce principalement dans les domaines du droit de la famille, du droit pénal et
                   du droit du travail.
                 </p>
